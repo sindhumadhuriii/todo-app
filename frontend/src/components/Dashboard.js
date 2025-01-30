@@ -3,18 +3,17 @@ import { getAuth } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import "../styles/dashboard.css"; // Importing the CSS file
 
-const BACKEND_URL = "http://localhost:5000";
-
-// Firebase configuration 
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 const firebaseConfig = {
-  apiKey: "AIzaSyD8mqwXJEwbb9Bwncuh54fauz4iSK1D6X0",
-  authDomain: "login-authentication-4106f.firebaseapp.com",
-  projectId: "login-authentication-4106f",
-  storageBucket: "login-authentication-4106f.firebasestorage.app",
-  messagingSenderId: "248719151816",
-  appId: "1:248719151816:web:86155051c320203d50cbfd",
-  measurementId: "G-R72RFWYYLK"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -40,7 +39,7 @@ const Dashboard = () => {
     const fetchTasks = async () => {
       try {
         const token = await getTokenFromLocalStorage(); // Get token here
-        const response = await fetch(`${BACKEND_URL}/api/getData`, {
+        const response = await fetch(`${backendUrl}/api/getData`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -68,7 +67,7 @@ const Dashboard = () => {
       // Send the new task to the backend
       try {
         const token = await getTokenFromLocalStorage(); // Get token here
-        const response = await fetch(`${BACKEND_URL}/api/storeData`, {
+        const response = await fetch(`${backendUrl}/api/storeData`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
