@@ -1,0 +1,12 @@
+{
+  "name": "todo-app",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "npm run start --workspace frontend", // Run the frontend React app
+    "start:backend": "npm run start --workspace backend", // Run the backend Express server
+    "deploy": "npm run deploy --workspace frontend && npm run deploy --workspace backend", // Deploy both
+    "install": "npm install --workspaces" // Install dependencies for both frontend and backend
+  },
+  "workspaces": ["frontend", "backend"],
+  "dependencies": {}
+}
