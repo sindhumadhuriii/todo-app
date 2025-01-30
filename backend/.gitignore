@@ -1,0 +1,11 @@
+# Ignore Vercel deployment files
+.vercel/
+
+# Ignore dependencies
+node_modules/
+
+# Ignore sensitive Firebase credentials
+login-authentication-4106f-firebase-adminsdk-fbsvc-5be0eed71f.json
+
+# Ignore environment variables
+.env

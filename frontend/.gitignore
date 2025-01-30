@@ -1,0 +1,11 @@
+# Ignore node_modules (essential)
+node_modules/
+
+# Ignore build files
+build/
+
+# Ignore Vercel deployment folder
+.vercel/
+
+# Ignore unnecessary Create React App (CRA) related files (if applicable)
+create-react-app/
