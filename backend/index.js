@@ -16,13 +16,10 @@ admin.initializeApp({
 
 const app = express();
 
-// Frontend URL from environment variable
-const frontendURL = process.env.FRONTEND_URL;
-
 app.use(
   cors({
-    origin: frontendURL, // Only allow requests from the frontend URL
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: "http://localhost:3000", // Only allow requests from the frontend URL
+    methods: ["GET", "POST"],
     credentials: true,
   })
 );
