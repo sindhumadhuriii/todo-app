@@ -10,4 +10,4 @@ build/
 # Ignore unnecessary Create React App (CRA) related files (if applicable)
 create-react-app/
 
-src/components/.env
+.env

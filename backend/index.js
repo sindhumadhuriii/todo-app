@@ -16,9 +16,11 @@ admin.initializeApp({
 
 const app = express();
 
+const frontendURL = process.env.FRONTEND_URL;
+
 app.use(
   cors({
-    origin: "http://localhost:3000", // Adjust this based on your frontend URL
+    origin: frontendURL, // Adjust this based on your frontend URL
     methods: ["GET", "POST"],
     credentials: true, // Allow cookies if you're using sessions or authentication
     allowedHeaders: ["Content-Type", "Authorization"], // Allow headers like Authorization
