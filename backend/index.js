@@ -48,6 +48,11 @@ const verifyToken = async (req, res, next) => {
   }
 };
 
+app.get("/", verifyToken, (req, res) => {
+  res.json({ message: "Hello, World!" });
+});
+
+
 // Route to fetch the stored data
 app.get("/api/getData", verifyToken, (req, res) => {
   res.json({ data: storedData });
