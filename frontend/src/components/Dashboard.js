@@ -1,7 +1,35 @@
 import React, { useState, useEffect } from "react";
+import { getAuth } from "firebase/auth";
+import { initializeApp } from "firebase/app";
 import "../styles/dashboard.css"; // Importing the CSS file
 
-const BACKEND_URL = "https://backend-db1s0i4on-sindhu-madhuris-projects.vercel.app"; 
+const BACKEND_URL = "http://localhost:5000";
+
+// Firebase configuration 
+const firebaseConfig = {
+  apiKey: "AIzaSyD8mqwXJEwbb9Bwncuh54fauz4iSK1D6X0",
+  authDomain: "login-authentication-4106f.firebaseapp.com",
+  projectId: "login-authentication-4106f",
+  storageBucket: "login-authentication-4106f.firebasestorage.app",
+  messagingSenderId: "248719151816",
+  appId: "1:248719151816:web:86155051c320203d50cbfd",
+  measurementId: "G-R72RFWYYLK"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// Function to get the Firebase token
+const getTokenFromLocalStorage = async () => {
+  const user = auth.currentUser; // Get the currently authenticated user
+  if (user) {
+    const idToken = await user.getIdToken(); // Get Firebase ID Token
+    return idToken; // Return the token
+  } else {
+    throw new Error('User is not logged in');
+  }
+};
 
 const Dashboard = () => {
   const [inputData, setInputData] = useState(""); // User input for new task
@@ -11,14 +39,21 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await fetch(`${BACKEND_URL}/api/getTasks`);
+        const token = await getTokenFromLocalStorage(); // Get token here
+        const response = await fetch(`${BACKEND_URL}/api/getData`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`, // Attach token to Authorization header
+          },
+        });
         const result = await response.json();
-        setTasks(result.tasks); // Assuming the backend sends a list of tasks
+        setTasks(result.data); // Assuming the response has `data`
       } catch (error) {
-        console.error("Error fetching tasks:", error);
+        console.error('Error fetching tasks:', error);
       }
     };
-    
+
     fetchTasks();
   }, []);
 
@@ -32,16 +67,18 @@ const Dashboard = () => {
 
       // Send the new task to the backend
       try {
-        const response = await fetch(`${BACKEND_URL}/api/storeTask`, {
+        const token = await getTokenFromLocalStorage(); // Get token here
+        const response = await fetch(`${BACKEND_URL}/api/storeData`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`, // Attach token to Authorization header
           },
-          body: JSON.stringify({ task: newTask }),
+          body: JSON.stringify({ data: newTask }),
         });
 
         const result = await response.json();
-        if (result.success) {
+        if (result.message === "Data stored successfully") {
           console.log("Task stored successfully in the backend");
         } else {
           console.error("Failed to store task in the backend");
@@ -54,31 +91,14 @@ const Dashboard = () => {
     }
   };
 
-  const handleCheck = async (taskId) => {
-    // Toggle the completion status of the task
-    const updatedTasks = tasks.map(task =>
-      task.id === taskId ? { ...task, completed: !task.completed } : task
+  // Handle checkbox change
+  const handleCheck = (taskId) => {
+    const updatedTasks = tasks.map((task) =>
+      task.id === taskId
+        ? { ...task, completed: !task.completed }
+        : task
     );
     setTasks(updatedTasks);
-
-    // Send the updated task completion status to the backend
-    const taskToUpdate = updatedTasks.find(task => task.id === taskId);
-    try {
-      const response = await fetch(`${BACKEND_URL}/api/updateTask`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ task: taskToUpdate }),
-      });
-
-      const result = await response.json();
-      if (!result.success) {
-        console.error("Failed to update task status in the backend");
-      }
-    } catch (error) {
-      console.error("Error updating task:", error);
-    }
   };
 
   return (
